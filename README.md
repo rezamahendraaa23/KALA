@@ -32,13 +32,13 @@ Jadwal harian per kota dari MyQuran, termasuk Imsak dan Terbit. Waktu yang sudah
 
 ### Musik
 
-Mengikuti pemutar yang terdaftar di Windows, seperti Spotify dan browser. Bisa putar, jeda, ganti lagu, geser posisi, dan atur volume. Lirik sinkron dicari dari LRCLIB, KuGou, dan NetEase, dan barisnya bisa ikut tampil di notch.
+Mengikuti pemutar yang terdaftar di Windows, seperti Spotify dan browser. Bisa putar, jeda, ganti lagu, geser posisi, dan atur volume. Lirik sinkron dicari dari LRCLIB, QQ Music, NetEase, KuGou, dan lyrics.ovh. Tombol komentar di panel Musik menampilkan lirik di panel dan di notch; kalau dimatikan, notch hanya menampilkan equalizer.
 
 ![Musik](screens/musik.png)
 
 ### Agenda
 
-Membaca kalender Lark lewat CalDAV, tanpa membuat aplikasi di Developer Console. Hanya membaca, tidak mengubah jadwal. Password didapat dari Lark: Settings > Calendar > CalDAV sync.
+Membaca kalender Lark lewat CalDAV, tanpa membuat aplikasi di Developer Console. Hanya membaca, tidak mengubah jadwal. Password didapat dari Lark: Settings > Calendar > CalDAV sync. CalDAV hanya mengirim kode ruangan, jadi nama lengkapnya bisa diisi sendiri di Pengaturan > Jadwal Lark.
 
 ### Notifikasi
 
@@ -46,7 +46,7 @@ Notifikasi Windows tampil di notch dan tersimpan sebagai riwayat per aplikasi. A
 
 ### Fokus
 
-Pomodoro dengan mode fokus, rehat, dan rehat panjang. Timer tetap terlihat di notch saat panel tertutup.
+Pomodoro dengan mode fokus, rehat, dan rehat panjang. Timer tetap terlihat di notch saat panel tertutup. Selama sesi fokus, notifikasi ditahan dan tetap masuk riwayat, sedangkan izin Claude Code tetap muncul.
 
 ![Fokus](screens/fokus.png)
 
@@ -61,6 +61,26 @@ Scan QR dari HP di Wi-Fi yang sama untuk mengirim file dua arah. File dari HP ma
 Permintaan izin Claude Code di VS Code bisa dijawab dari notch. Fitur ini mati sampai dinyalakan di Pengaturan > Sistem.
 
 ![Izin Claude Code](screens/izin.png)
+
+## Aplikasi Android
+
+Unduh `KALA-android.apk` dari halaman [Releases](https://github.com/rezamahendraaa23/KALA/releases/latest), pasang, lalu pindai QR dari Pengaturan > Sistem > Hubungkan HP. HP dan laptop harus di Wi-Fi yang sama.
+
+<p>
+  <img src="screens/android-izin.png" width="240" alt="Izin Claude Code di HP">
+  <img src="screens/android-jadwal.png" width="240" alt="Jadwal di HP">
+  <img src="screens/android-musik.png" width="240" alt="Musik di HP">
+</p>
+
+- **Izin Claude Code:** perintah tampil utuh dan harus digeser untuk mengizinkan. Bisa juga dijawab dari notifikasi setelah HP dibuka.
+- **Izinkan otomatis:** aktif 8 jam selama HP tersambung. Perintah yang dikenali berisiko, seperti hapus file dan `git push`, tetap ditanya, tapi daftar itu tidak menangkap semuanya.
+- **Jadwal:** waktu sholat dan meeting hari ini, plus pengingat meeting di HP.
+- **Musik:** putar, jeda, ganti lagu, dan lirik sinkron.
+- **Berkas dan clipboard:** kirim dua arah, termasuk lewat menu Bagikan di Android.
+- **Sambung lagi:** setelah diputus, tekan Sambung lagi di HP lalu izinkan di notch. Tidak perlu pindai ulang.
+- **Pembaruan:** aplikasi memberi tahu saat ada versi baru di Releases.
+
+Permintaan izin, jadwal, musik, dan clipboard terenkripsi. Isi berkas yang dikirim tidak.
 
 ## Pengaturan
 
@@ -87,5 +107,6 @@ Pengaturan, riwayat notifikasi, dan jadwal tersimpan di laptop. Password CalDAV 
 - Judul, artis, album, dan durasi lagu, ke penyedia lirik.
 - Permintaan kalender, ke server CalDAV Lark, kalau dihubungkan.
 - Pemeriksaan versi baru, ke GitHub.
+- Jadwal, lagu yang diputar, clipboard, dan permintaan izin, ke HP yang kamu hubungkan, hanya lewat Wi-Fi lokal.
 
 Dibuat oleh Reza Mahendra.
