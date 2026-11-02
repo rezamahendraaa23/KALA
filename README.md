@@ -56,7 +56,9 @@ Kalau HP tersambung lewat aplikasi, tab ini langsung siap. Perangkat lain cukup 
 - **Izin Claude Code:** permintaan izin di VS Code bisa dijawab dari notch. Mati sampai dinyalakan di Pengaturan > Sistem.
 - **Notifikasi:** notifikasi Windows tampil di notch dan tersimpan sebagai riwayat per aplikasi. Tab-nya bisa dimunculkan di Pengaturan > Tab & Navigasi.
 - **Penanda singkat:** animasi saat Caps Lock atau mode hening berubah, dan peringatan kalau CPU atau RAM di atas 90% selama satu menit.
-- **Tampilan:** bentuk, posisi, ukuran, warna, transparansi, urutan tab, dan isi notch bisa diatur.
+- **Isi notch:** kiri, tengah, dan kanan bisa diisi maskot, sholat, cuaca, status Claude, meeting, fokus, lagu, hitung mundur, jam pulang, tanggal Hijriah, atau info sistem. Ada lima maskot untuk dipilih.
+- **Earphone:** notch memberi tahu saat TWS atau headset tersambung dan terputus.
+- **Tampilan:** bentuk, posisi, ukuran, warna, transparansi, dan urutan tab bisa diatur.
 
 ![Pengaturan Tampilan](screens/pengaturan.png)
 
