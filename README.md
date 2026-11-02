@@ -26,7 +26,7 @@ Jam, ringkasan sholat, meeting, dan lagu, plus satu garis waktu untuk hari ini.
 
 ### Sholat
 
-Jadwal harian per kota dari MyQuran, termasuk Imsak dan Terbit. Waktu yang sudah lewat bisa ditandai sudah sholat. Pengingat muncul 5 sampai 30 menit sebelumnya dan saat waktunya masuk.
+Jadwal harian per kota dari MyQuran, termasuk Imsak dan Terbit. Waktu yang sudah lewat bisa ditandai sudah sholat. Pengingat muncul 5 sampai 30 menit sebelumnya dan saat waktunya masuk. Langit di tab ini mengikuti cuaca kota pilihanmu dari Open-Meteo: matahari, awan, hujan, atau petir, lalu bulan dan bintang saat malam.
 
 ![Sholat](screens/sholat.png)
 
@@ -104,6 +104,7 @@ Bentuk menempel atau melayang, posisi, ukuran, warna, transparansi, blur, urutan
 Pengaturan, riwayat notifikasi, dan jadwal tersimpan di laptop. Password CalDAV disimpan terenkripsi dengan akun Windows. Data yang keluar hanya:
 
 - Kota yang dipilih, ke MyQuran.
+- Nama dan koordinat kota yang dipilih, ke Open-Meteo, untuk cuaca.
 - Judul, artis, album, dan durasi lagu, ke penyedia lirik.
 - Permintaan kalender, ke server CalDAV Lark, kalau dihubungkan.
 - Pemeriksaan versi baru, ke GitHub.
