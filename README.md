@@ -73,6 +73,7 @@ Unduh `KALA-android.apk` dari halaman [Releases](https://github.com/rezamahendra
 </p>
 
 - **Izin Claude Code:** perintah tampil utuh dan harus digeser untuk mengizinkan. Bisa juga dijawab dari notifikasi setelah HP dibuka.
+- **Baca dan balas Claude:** mati sampai dinyalakan di Pengaturan > Sistem. HP bisa membaca hasil sesi dan melanjutkannya dengan sidik jari. Balasan dari HP tampil di HP, tidak di panel VS Code yang sedang terbuka. Tiap perintah yang bisa mengubah sesuatu harus diizinkan dulu, dan tidak dijawab berarti ditolak.
 - **Izinkan otomatis:** aktif 8 jam selama HP tersambung. Perintah yang dikenali berisiko, seperti hapus file dan `git push`, tetap ditanya, tapi daftar itu tidak menangkap semuanya.
 - **Jadwal:** waktu sholat dan meeting hari ini, plus pengingat meeting di HP.
 - **Musik:** putar, jeda, ganti lagu, dan lirik sinkron.
