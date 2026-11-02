@@ -62,14 +62,14 @@ Wi-Fi, Bluetooth, hotspot, mikrofon, kecerahan, dan volume di satu tempat, ditam
 - **Monitor:** CPU, GPU, RAM, dan kecepatan internet dengan grafik kecil.
 - **Clipboard:** teks dan gambar yang disalin, bisa dicari dan disematkan. Mati sampai dinyalakan. Riwayat hanya di memori, sematan disimpan terenkripsi.
 - **Air:** target minum harian, gelas yang bisa diatur, dan pengingat tiap 90 menit antara 08.00 dan 21.00.
-- **Rak Berkas:** tempat menaruh file sebentar, lalu ditarik lagi ke WhatsApp, Discord, atau folder lain.
+- **Rak Berkas:** jemuran untuk menaruh sampai 8 file sebentar, lalu ditarik lagi ke WhatsApp, Discord, atau folder lain. Menyeret file ke notch langsung membuka tab ini.
 
 Clipboard, Air, dan Rak Berkas disembunyikan dulu. Munculkan di Pengaturan > Tab & Navigasi.
 
 ### Yang lain
 
 - **Izin Claude Code:** permintaan izin di VS Code bisa dijawab dari notch. Mati sampai dinyalakan di Pengaturan > Sistem.
-- **Notifikasi:** notifikasi Windows tampil di notch dan tersimpan sebagai riwayat per aplikasi. Tab-nya bisa dimunculkan di Pengaturan > Tab & Navigasi.
+- **Notifikasi:** notifikasi Windows tampil di notch dan tersimpan sebagai riwayat, dengan filter belum dibaca, bisukan per aplikasi, dan jangan ganggu. Klik notifikasi untuk membuka aplikasinya; Windows tidak memberi tautan ke chat tertentu, jadi yang terbuka aplikasinya saja. Tab-nya bisa dimunculkan di Pengaturan > Tab & Navigasi.
 - **Penanda singkat:** animasi saat Caps Lock atau mode hening berubah, dan peringatan kalau CPU atau RAM di atas 90% selama satu menit.
 - **Isi notch:** kiri, tengah, dan kanan bisa diisi maskot, sholat, cuaca, status Claude, meeting, fokus, lagu, hitung mundur, jam pulang, tanggal Hijriah, atau info sistem. Ada enam maskot untuk dipilih.
 - **Earphone:** notch memberi tahu saat TWS atau headset tersambung dan terputus.
