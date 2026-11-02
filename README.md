@@ -23,7 +23,7 @@ Keduanya memberi tahu saat ada versi baru. Di laptop, pembaruan dipasang dari Pe
 
 ### Sholat
 
-Jadwal harian per kota dari MyQuran, termasuk Imsak dan Terbit, dengan pengingat 5 sampai 30 menit sebelumnya. Langitnya mengikuti cuaca kota pilihanmu dari Open-Meteo: matahari, awan, hujan, atau petir, lalu bulan dan bintang saat malam.
+Jadwal harian per kota dari MyQuran, termasuk Imsak dan Terbit, dengan pengingat 5 sampai 30 menit sebelumnya. Langitnya mengikuti cuaca dari Open-Meteo, di kota pilihanmu atau di kecamatan yang kamu isi sendiri: matahari, awan, hujan, atau petir, lalu bulan dan bintang saat malam.
 
 ![Tab Sholat](screens/sholat.png)
 
@@ -84,6 +84,7 @@ Pengaturan, riwayat notifikasi, dan jadwal tersimpan di laptop. Password CalDAV 
 | Data | Ke mana |
 | --- | --- |
 | Kota yang dipilih | MyQuran dan Open-Meteo |
+| Lokasi cuaca, kalau kamu mengisinya | Open-Meteo |
 | Judul, artis, album, dan durasi lagu | Penyedia lirik |
 | Permintaan kalender | Server CalDAV Lark, kalau dihubungkan |
 | Pemeriksaan versi baru | GitHub |
