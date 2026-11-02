@@ -62,7 +62,7 @@ Wi-Fi, Bluetooth, hotspot, mikrofon, kecerahan, dan volume di satu tempat, ditam
 - **Monitor:** CPU, GPU, RAM, dan kecepatan internet dengan grafik kecil.
 - **Clipboard:** teks dan gambar yang disalin, bisa dicari dan disematkan. Mati sampai dinyalakan. Riwayat hanya di memori, sematan disimpan terenkripsi.
 - **Air:** target minum harian, gelas yang bisa diatur, dan pengingat tiap 90 menit antara 08.00 dan 21.00.
-- **Rak Berkas:** jemuran untuk menaruh sampai 8 file sebentar, lalu ditarik lagi ke WhatsApp, Discord, atau folder lain. Menyeret file ke notch langsung membuka tab ini.
+- **Rak Berkas:** jemuran untuk menaruh sampai 8 file sebentar, lalu ditarik lagi ke WhatsApp, Discord, atau folder lain. Klik untuk memilih beberapa file dan tarik semuanya sekaligus, atau tekan **Kirim ke HP** supaya file siap diambil di tab Berkas pada aplikasi HP. Menyeret file ke notch langsung membuka tab ini.
 
 Clipboard, Air, dan Rak Berkas disembunyikan dulu. Munculkan di Pengaturan > Tab & Navigasi.
 
@@ -91,7 +91,7 @@ Di laptop, buka Pengaturan > Sistem > **Hubungkan HP**, lalu pindai QR dari apli
 - **Izinkan otomatis:** aktif 8 jam selama HP tersambung. Perintah yang dikenali berisiko, seperti hapus file dan `git push`, tetap ditanya, tapi daftar itu tidak menangkap semuanya.
 - **Baca dan balas Claude:** mati sampai dinyalakan di laptop. Sesi dibuka dengan sidik jari. Balasan dari HP tampil di HP, tidak di panel VS Code yang sedang terbuka. Tiap perintah yang bisa mengubah sesuatu harus diizinkan dulu, dan tidak dijawab berarti ditolak.
 - **Jadwal dan musik:** waktu sholat, cuaca, meeting hari ini, pengingat meeting, kontrol lagu, dan lirik sinkron.
-- **Berkas dan clipboard:** kirim dua arah, termasuk lewat menu Bagikan di Android.
+- **Berkas dan clipboard:** kirim dua arah, termasuk lewat menu Bagikan di Android. File yang sudah diunduh tinggal dibuka, dan **Buka folder** membawa ke folder Download.
 - **Kendali laptop:** kunci layar, mode hening, dan volume dari tab Laptop. Menidurkan laptop harus digeser lalu dibuka dengan sidik jari.
 - **Sambung lagi:** setelah diputus, tekan Sambung lagi di HP lalu izinkan di notch, tanpa pindai ulang.
 
