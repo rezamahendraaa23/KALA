@@ -51,12 +51,19 @@ Kalau HP tersambung lewat aplikasi, tab ini langsung siap. Perangkat lain cukup 
 
 ![Tab Kirim](screens/kirim.png)
 
+### Claude, catatan, clipboard, dan kontrol
+
+- **Claude:** daftar sesi Claude Code di laptop ini, yang sedang bekerja atau sudah selesai, dengan tombol untuk membuka foldernya di VS Code.
+- **Catatan:** satu catatan cepat yang tersimpan otomatis.
+- **Clipboard:** 10 teks terakhir yang disalin. Mati sampai dinyalakan, hanya di memori, dan password yang disalin ikut tercatat.
+- **Kontrol:** mode hening, mikrofon, volume, dan kecerahan layar laptop.
+
 ### Yang lain
 
 - **Izin Claude Code:** permintaan izin di VS Code bisa dijawab dari notch. Mati sampai dinyalakan di Pengaturan > Sistem.
 - **Notifikasi:** notifikasi Windows tampil di notch dan tersimpan sebagai riwayat per aplikasi. Tab-nya bisa dimunculkan di Pengaturan > Tab & Navigasi.
 - **Penanda singkat:** animasi saat Caps Lock atau mode hening berubah, dan peringatan kalau CPU atau RAM di atas 90% selama satu menit.
-- **Isi notch:** kiri, tengah, dan kanan bisa diisi maskot, sholat, cuaca, status Claude, meeting, fokus, lagu, hitung mundur, jam pulang, tanggal Hijriah, atau info sistem. Ada lima maskot untuk dipilih.
+- **Isi notch:** kiri, tengah, dan kanan bisa diisi maskot, sholat, cuaca, status Claude, meeting, fokus, lagu, hitung mundur, jam pulang, tanggal Hijriah, atau info sistem. Ada enam maskot untuk dipilih.
 - **Earphone:** notch memberi tahu saat TWS atau headset tersambung dan terputus.
 - **Tampilan:** bentuk, posisi, ukuran, warna, transparansi, dan urutan tab bisa diatur.
 
