@@ -29,7 +29,7 @@ Jadwal harian per kota dari MyQuran, termasuk Imsak dan Terbit, dengan pengingat
 
 ### Musik
 
-Mengikuti pemutar yang terdaftar di Windows, seperti Spotify dan browser. Lirik sinkron dicari dari LRCLIB, QQ Music, NetEase, KuGou, dan lyrics.ovh. Tombol komentar menampilkan lirik di panel dan notch; kalau dimatikan, notch hanya menampilkan equalizer.
+Mengikuti pemutar yang terdaftar di Windows, seperti Spotify dan browser. Lagu dari Spotify memakai sampulnya dan aksen hijau Spotify. Lirik sinkron dicari dari LRCLIB, QQ Music, NetEase, KuGou, dan lyrics.ovh. Tombol komentar menampilkan lirik di panel dan notch; kalau dimatikan, notch hanya menampilkan equalizer.
 
 ![Tab Musik](screens/musik.png)
 
@@ -51,12 +51,20 @@ Kalau HP tersambung lewat aplikasi, tab ini langsung siap. Perangkat lain cukup 
 
 ![Tab Kirim](screens/kirim.png)
 
-### Claude, catatan, clipboard, dan kontrol
+### Pusat Kontrol
+
+Wi-Fi, Bluetooth, hotspot, mikrofon, kecerahan, dan volume di satu tempat, ditambah kunci layar, tidur, matikan atau mulai ulang (dengan konfirmasi), tangkap layar, folder Unduhan, dan mode hening. Panah di kartu Wi-Fi membuka daftar jaringan untuk disambungkan atau diputus. Panah di kartu Bluetooth menampilkan perangkat yang sudah disandingkan beserta statusnya.
+
+### Modul lain
 
 - **Claude:** daftar sesi Claude Code di laptop ini, yang sedang bekerja atau sudah selesai, dengan tombol untuk membuka foldernya di VS Code.
-- **Catatan:** satu catatan cepat yang tersimpan otomatis.
-- **Clipboard:** 10 teks terakhir yang disalin. Mati sampai dinyalakan, hanya di memori, dan password yang disalin ikut tercatat.
-- **Kontrol:** mode hening, mikrofon, volume, dan kecerahan layar laptop.
+- **Catatan & Tugas:** catatan cepat dan daftar tugas dengan tanggal, disaring Hari ini, Mendatang, atau Semua.
+- **Monitor:** CPU, GPU, RAM, dan kecepatan internet dengan grafik kecil.
+- **Clipboard:** teks dan gambar yang disalin, bisa dicari dan disematkan. Mati sampai dinyalakan. Riwayat hanya di memori, sematan disimpan terenkripsi.
+- **Air:** target minum harian, gelas yang bisa diatur, dan pengingat tiap 90 menit antara 08.00 dan 21.00.
+- **Rak Berkas:** tempat menaruh file sebentar, lalu ditarik lagi ke WhatsApp, Discord, atau folder lain.
+
+Clipboard, Air, dan Rak Berkas disembunyikan dulu. Munculkan di Pengaturan > Tab & Navigasi.
 
 ### Yang lain
 
@@ -84,6 +92,7 @@ Di laptop, buka Pengaturan > Sistem > **Hubungkan HP**, lalu pindai QR dari apli
 - **Baca dan balas Claude:** mati sampai dinyalakan di laptop. Sesi dibuka dengan sidik jari. Balasan dari HP tampil di HP, tidak di panel VS Code yang sedang terbuka. Tiap perintah yang bisa mengubah sesuatu harus diizinkan dulu, dan tidak dijawab berarti ditolak.
 - **Jadwal dan musik:** waktu sholat, cuaca, meeting hari ini, pengingat meeting, kontrol lagu, dan lirik sinkron.
 - **Berkas dan clipboard:** kirim dua arah, termasuk lewat menu Bagikan di Android.
+- **Kendali laptop:** kunci layar, mode hening, dan volume dari tab Laptop. Menidurkan laptop harus digeser lalu dibuka dengan sidik jari.
 - **Sambung lagi:** setelah diputus, tekan Sambung lagi di HP lalu izinkan di notch, tanpa pindai ulang.
 
 ## Data
@@ -108,6 +117,8 @@ Pengaturan, riwayat notifikasi, dan jadwal tersimpan di laptop. Password CalDAV 
 - Nama ruangan dari Lark hanya berupa kode sampai kamu melengkapinya.
 - QQ Music, NetEase, dan KuGou bukan API resmi, jadi sewaktu-waktu bisa berhenti bekerja.
 - Windows Firewall akan meminta izin saat Kirim file atau HP pertama kali dipakai.
+- Daftar Wi-Fi butuh izin Lokasi Windows untuk aplikasi desktop. Perangkat Bluetooth hanya ditampilkan; menyambungkannya tetap lewat Pengaturan Windows.
+- Kalau lagu diputar dari browser, sampul tidak ditampilkan karena browser hanya mengirim logonya sendiri.
 
 Tangkapan layar memakai jadwal dan lagu contoh.
 
