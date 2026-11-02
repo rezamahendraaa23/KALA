@@ -2,6 +2,8 @@
 
 **Sakiceup, sagala katempo.** Sekedip mata, semua kelihatan.
 
+[Lihat halaman KALA](https://rezamahendraaa23.github.io/KALA/)
+
 KALA adalah notch di tepi atas layar Windows, dengan aplikasi pendamping di Android. Jadwal sholat, lirik lagu, meeting, dan izin Claude Code terlihat tanpa pindah jendela.
 
 ![Panel Home KALA](screens/home.png)

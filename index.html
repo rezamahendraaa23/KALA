@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KALA</title>
+<meta name="description" content="KALA, notch di tepi atas layar Windows: jadwal sholat, lirik lagu, meeting, dan izin Claude Code, sekali lirik.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Noto+Sans+Sundanese&display=swap">
+<style>
+/* Layout: the page is the top of a screen. A working notch hangs from it, and each section is something to play with. */
+:root {
+  color-scheme: dark;
+  --navy: #0b1026;
+  --deep: #050814;
+  --surface: #141c3a;
+  --line: rgba(190, 210, 245, 0.16);
+  --ink: #f4f6fb;
+  --muted: #a9b8d3;
+  --blue: #2f80ff;
+  --action: #1f6ae8;
+  --sun: #ffd28a;
+  --cheek: #e0719a;
+  --body: "Figtree", system-ui, sans-serif;
+  --clock: "Space Grotesk", ui-monospace, monospace;
+  --aksara: "Noto Sans Sundanese", serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: var(--navy); }
+body { margin: 0; background: var(--navy); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.55; overflow-x: hidden; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--sun); outline-offset: 3px; border-radius: 6px; }
+.wrap { max-width: 1060px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; line-height: 1.08; text-wrap: balance; letter-spacing: -0.02em; }
+h2 { font-size: clamp(30px, 5vw, 46px); font-weight: 800; }
+p { margin: 0; }
+.quiet { color: var(--muted); max-width: 54ch; }
+.band { padding-block: clamp(64px, 10vw, 112px); }
+.button { display: inline-flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 24px; border-radius: 999px; font-weight: 700; text-decoration: none; border: 1px solid var(--line); background: none; color: var(--ink); font-family: inherit; font-size: 16px; cursor: pointer; transition: transform 0.18s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.button:hover { transform: translateY(-2px) scale(1.02); }
+.button.primary { background: var(--action); border-color: var(--action); color: #fff; }
+.choice { display: inline-flex; min-height: 44px; align-items: center; padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--muted); font: 600 15px var(--body); cursor: pointer; }
+.choice[aria-pressed="true"] { background: var(--action); border-color: var(--action); color: #fff; }
+
+/* Top bar */
+.topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; background: color-mix(in srgb, var(--navy) 86%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; }
+.topbar-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; }
+.wordmark { display: block; height: 19px; width: auto; color: var(--ink); }
+.toplinks { display: flex; align-items: center; gap: 22px; font-size: 15px; font-weight: 600; color: var(--muted); }
+.toplinks a { text-decoration: none; }
+.toplinks a:hover { color: var(--ink); }
+.toplinks .small { min-height: 40px; padding: 6px 16px; font-size: 14px; color: #fff; }
+
+/* Hero */
+.hero { padding-top: clamp(36px, 6vw, 68px); text-align: center; position: relative; overflow: hidden; }
+.hero h1 { font-size: clamp(38px, 7.2vw, 78px); font-weight: 800; }
+.hero h1 span { color: var(--blue); }
+.gloss { margin-top: 10px; font-size: 15px; color: var(--muted); }
+.lead { margin: 16px auto 0; font-size: clamp(17px, 2.1vw, 20px); max-width: 44ch; }
+.actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.hero .actions { justify-content: center; }
+.hint { margin-top: 12px; font-size: 14px; color: var(--muted); }
+
+/* The pretend screen, with the notch hanging from its top edge */
+.stage { position: relative; margin: clamp(32px, 5vw, 52px) auto 0; max-width: 980px; min-height: 420px; border: 1px solid var(--line); border-bottom: 0; border-radius: 22px 22px 0 0; background: linear-gradient(170deg, #1d2a5e 0%, #16204a 46%, #0f1636 100%); overflow: hidden; }
+.stage-dots { position: absolute; inset: 0; background-image: radial-gradient(rgba(255,255,255,.1) 1px, transparent 1.3px); background-size: 18px 18px; -webkit-mask-image: linear-gradient(115deg, transparent 40%, #000 100%); mask-image: linear-gradient(115deg, transparent 40%, #000 100%); }
+.stage-aksara { position: absolute; right: 18px; bottom: -34px; font-family: var(--aksara); font-size: clamp(120px, 20vw, 210px); line-height: 1; color: transparent; -webkit-text-stroke: 1.5px rgba(120, 165, 255, .28); user-select: none; }
+.stage-peek { position: absolute; left: clamp(16px, 5vw, 56px); bottom: -8px; width: clamp(84px, 13vw, 124px); }
+.notch-wrap { position: relative; display: flex; justify-content: center; z-index: 2; }
+.notch { position: relative; width: min(330px, calc(100% - 64px)); background: var(--deep); border-radius: 0 0 22px 22px; transition: width .46s cubic-bezier(.3,1.25,.5,1), border-radius .3s; box-shadow: 0 18px 44px rgba(0,0,0,.42); }
+.notch::before, .notch::after { content: ""; position: absolute; top: 0; width: 22px; height: 22px; background: radial-gradient(circle at 0 100%, transparent 21.5px, var(--deep) 22px); }
+.notch::before { left: -22px; }
+.notch::after { right: -22px; transform: scaleX(-1); }
+.notch.open { width: min(720px, calc(100% - 48px)); border-radius: 0 0 30px 30px; }
+.notch-bar { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 12px; min-height: 46px; padding: 6px 18px; background: none; border: 0; color: var(--ink); font-family: var(--body); cursor: pointer; }
+.notch-time { font: 700 16px var(--clock); font-variant-numeric: tabular-nums; }
+.notch-title { font-size: 15px; font-weight: 700; }
+.notch-state { font-size: 13px; font-weight: 600; color: var(--muted); min-width: 52px; text-align: right; }
+.notch-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+.notch.open .notch-body { grid-template-rows: 1fr; }
+.notch-inner { overflow: hidden; min-height: 0; }
+.pane-area { position: relative; padding: 4px 22px 8px; height: 216px; text-align: left; }
+.pane { position: absolute; inset: 4px 22px 8px; animation: pane-in .34s ease; }
+.pane[hidden] { display: none; }
+@keyframes pane-in { from { opacity: 0; transform: translateX(14px); } }
+.dock { display: flex; justify-content: center; gap: 4px; padding: 0 0 14px; }
+.dock button { display: flex; align-items: center; justify-content: center; width: 52px; height: 36px; border: 0; border-radius: 99px; background: none; color: var(--muted); cursor: pointer; }
+.dock button[aria-pressed="true"] { background: var(--action); color: #fff; }
+.dock svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Pane: Home */
+.big-clock { font: 700 clamp(40px, 7vw, 54px)/1 var(--clock); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.big-clock i { font-style: normal; color: var(--blue); font-weight: 500; }
+.big-clock small { font-size: .4em; color: var(--blue); margin-left: 6px; }
+.home-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; }
+.home-hello { text-align: right; font-size: 13px; font-weight: 700; }
+.home-hello span { display: block; font-weight: 400; color: var(--muted); }
+.ribbon { position: relative; height: 56px; margin-top: 16px; }
+.ribbon-line { position: absolute; inset: 24px 0 auto; height: 1px; background: rgba(255,255,255,.16); }
+.ribbon-done { position: absolute; left: 0; top: 24px; height: 1px; background: var(--blue); box-shadow: 0 0 8px var(--blue); }
+.ribbon-now { position: absolute; top: 20px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 10px rgba(255,255,255,.7); }
+.ribbon-meet { position: absolute; top: 21px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #b9a7ff; }
+.ribbon-p { position: absolute; top: 0; width: 56px; margin-left: -28px; text-align: center; font-size: 11px; line-height: 1; font-weight: 600; color: var(--muted); }
+.ribbon-p::before { content: none; position: absolute; left: 50%; top: 15px; width: 1px; height: 8px; background: rgba(255,255,255,.3); }
+.ribbon-p b { display: block; margin-top: 26px; font-weight: 400; font-size: 11px; }
+.ribbon-p.is-next { color: var(--blue); }
+.readouts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 16px; }
+.readouts > div { min-width: 0; padding-inline: 14px; border-left: 1px solid rgba(255,255,255,.08); }
+.readouts > div:first-child { padding-left: 0; border: 0; }
+.readouts p { display: flex; justify-content: space-between; gap: 6px; font-size: 11px; color: var(--blue); font-weight: 600; white-space: nowrap; overflow: hidden; }
+.readouts p span { color: var(--muted); letter-spacing: .06em; }
+.readouts strong { display: block; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* Pane: Sholat */
+.prayer-pane { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 14px; align-items: center; height: 100%; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.prayer-name { font-size: clamp(30px, 5vw, 40px); font-weight: 800; line-height: 1.1; }
+.prayer-name small { font-size: .55em; font-weight: 600; color: var(--muted); margin-left: 6px; }
+.prayer-left { font-size: 15px; font-weight: 700; color: var(--blue); }
+.bar { height: 4px; border-radius: 9px; background: rgba(255,255,255,.1); margin-top: 8px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--blue); }
+.arc { width: 100%; height: auto; overflow: visible; }
+
+/* Pane: Musik */
+.music-pane { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 18px; align-items: center; height: 100%; }
+.track { display: flex; gap: 12px; align-items: center; }
+.art { flex: none; width: 58px; height: 58px; border-radius: 16px; background: linear-gradient(135deg, #2f80ff, #b9a7ff); }
+.track b { display: block; font-size: 15px; }
+.track span { font-size: 13px; color: var(--muted); }
+.lyrics { border-left: 1px solid rgba(255,255,255,.08); padding-left: 18px; min-width: 0; }
+.lyrics p { font-size: 13px; font-weight: 600; color: rgba(255,255,255,.28); }
+.lyrics .now-line { font-size: clamp(17px, 2.6vw, 21px); font-weight: 800; color: var(--ink); margin-block: 8px; min-height: 2.4em; }
+.lyrics .now-line span { display: inline-block; animation: hop .42s cubic-bezier(.3,1.7,.5,1) both; }
+@keyframes hop { from { transform: translateY(.7em) scale(.75); opacity: 0; } }
+
+/* Pane: Izin */
+.ask { display: grid; gap: 10px; }
+.ask h3 { font-size: 18px; }
+.ask code { display: block; padding: 11px 13px; border-radius: 12px; background: rgba(255,255,255,.07); font-size: 13px; overflow-wrap: anywhere; }
+.ask-row { display: flex; justify-content: flex-end; gap: 8px; }
+.ask-row button { min-height: 40px; padding: 6px 16px; border-radius: 99px; border: 0; font: 700 14px var(--body); color: var(--ink); background: rgba(255,255,255,.1); cursor: pointer; }
+.ask-row .yes { background: var(--action); color: #fff; }
+.ask-done { min-height: 22px; font-size: 14px; font-weight: 600; color: var(--sun); }
+
+/* Mascot */
+.mascot { width: 100%; height: auto; display: block; overflow: visible; }
+.mascot .eye { transition: transform .12s ease-out; }
+.mascot .eye rect { transform-box: fill-box; transform-origin: center; transition: transform .09s; }
+.mascot.blink .eye rect, .mascot.asleep .eye rect { transform: scaleY(.08); }
+.mascot .zzz { opacity: 0; font: 700 26px var(--clock); fill: var(--muted); }
+.mascot.asleep .zzz { animation: zzz 3s ease-in-out infinite; }
+.mascot.woke { animation: woke .45s cubic-bezier(.3,1.8,.5,1); }
+@keyframes zzz { 0% { opacity: 0; transform: translate(0, 8px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translate(14px, -22px); } }
+@keyframes woke { 40% { transform: translateY(-10px) scale(1.04); } }
+
+/* Sky */
+.sky-section { border-block: 1px solid var(--line); }
+.head { display: grid; gap: 12px; margin-bottom: 28px; }
+.sky { position: relative; height: clamp(250px, 38vw, 400px); border-radius: 28px; overflow: hidden; background: #2a2f49; transition: background 0.8s; isolation: isolate; }
+.sky[data-sky="clear"] { background: linear-gradient(180deg, #2c5cae 0%, #6c86c9 62%, #eeb77d 100%); }
+.sky[data-sky="cloudy"] { background: linear-gradient(180deg, #4b5d7e, #7e8eaa); }
+.sky[data-sky="rain"] { background: linear-gradient(180deg, #252e46, #48556f); }
+.sky[data-sky="night"] { background: linear-gradient(180deg, #070b20, #1f2460); }
+.sun, .moon, .cloud, .star, .drop { position: absolute; }
+.sun { left: 62%; top: 14%; width: 86px; aspect-ratio: 1; border-radius: 50%; background: var(--sun); box-shadow: 0 0 70px 26px rgba(255, 210, 138, 0.5); transition: transform 0.8s cubic-bezier(0.4, 1.3, 0.5, 1), opacity 0.6s; }
+.moon { left: 68%; top: 14%; width: 74px; aspect-ratio: 1; border-radius: 50%; box-shadow: inset -20px -6px 0 0 #dfe2ff; opacity: 0; transition: opacity 0.7s, transform 0.8s; transform: translateY(40px); }
+.cloud { width: 170px; height: 46px; border-radius: 99px; background: #d7deea; opacity: 0; transition: opacity 0.7s; animation: drift 9s ease-in-out infinite alternate; }
+.cloud::before, .cloud::after { content: ""; position: absolute; border-radius: 50%; background: inherit; }
+.cloud::before { width: 62px; height: 62px; left: 26px; top: -28px; }
+.cloud::after { width: 80px; height: 80px; left: 70px; top: -40px; }
+.cloud.one { left: 52%; top: 28%; }
+.cloud.two { left: 16%; top: 50%; transform: scale(0.7); animation-delay: -4s; }
+.star { width: 3px; height: 3px; border-radius: 50%; background: #fff; opacity: 0; }
+.drop { top: -24px; width: 2px; height: 18px; border-radius: 2px; background: #b4cdf7; opacity: 0; }
+.sky[data-sky="cloudy"] .cloud, .sky[data-sky="rain"] .cloud { opacity: 1; }
+.sky[data-sky="rain"] .cloud { background: #7d8aa2; }
+.sky[data-sky="rain"] .sun, .sky[data-sky="night"] .sun { opacity: 0; transform: translateY(70px); }
+.sky[data-sky="cloudy"] .sun { opacity: 0.75; }
+.sky[data-sky="night"] .moon { opacity: 1; transform: none; }
+.sky[data-sky="night"] .star { animation: twinkle 3.5s ease-in-out infinite alternate; }
+.sky[data-sky="rain"] .drop { animation: fall 0.85s linear infinite; }
+.sky-label { position: absolute; left: 22px; bottom: 18px; z-index: 2; font-weight: 700; font-size: clamp(22px, 3.4vw, 34px); text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35); }
+.sky-label small { display: block; font: 500 14px var(--body); opacity: 0.9; }
+.sky-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+@keyframes drift { from { margin-left: -14px; } to { margin-left: 14px; } }
+@keyframes twinkle { from { opacity: 0.2; } to { opacity: 1; } }
+@keyframes fall { 0% { transform: translateY(0); opacity: 0; } 12% { opacity: 0.7; } 100% { transform: translateY(440px); opacity: 0; } }
+
+/* Things that are shown as real screenshots */
+.shot { border-radius: 18px; display: block; max-width: 100%; height: auto; }
+.gallery { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 40px 28px; }
+.gallery figure { margin: 0; grid-column: span 6; display: grid; gap: 12px; align-content: start; }
+.gallery figure.wide { grid-column: span 12; }
+.gallery figcaption { color: var(--muted); max-width: 46ch; }
+.gallery figcaption b { color: var(--ink); display: block; font-size: 19px; margin-bottom: 2px; }
+
+/* Phone */
+.phone-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 6vw, 72px); align-items: center; }
+.phones { display: flex; gap: 14px; justify-content: center; }
+.phones img { width: min(48%, 250px); height: auto; border-radius: 26px; border: 1px solid var(--line); }
+.phones img:nth-child(2) { margin-top: 44px; }
+.feature-list { list-style: none; margin: 22px 0 0; padding: 0; display: grid; gap: 10px; color: var(--muted); }
+.feature-list b { color: var(--ink); }
+.slide { position: relative; margin-top: 28px; max-width: 400px; }
+.slide label { display: block; font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+.slide code { display: block; padding: 12px 14px; background: var(--deep); border-radius: 14px; font-size: 14px; margin-bottom: 10px; overflow-wrap: anywhere; }
+#allow { appearance: none; width: 100%; height: 56px; border-radius: 99px; background: rgba(47, 128, 255, 0.22); cursor: grab; margin: 0; }
+#allow::-webkit-slider-thumb { appearance: none; width: 48px; height: 48px; border-radius: 50%; background: var(--ink); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4); }
+#allow::-moz-range-thumb { width: 48px; height: 48px; border: 0; border-radius: 50%; background: var(--ink); }
+.slide-result { min-height: 24px; margin-top: 8px; font-size: 15px; font-weight: 600; color: var(--sun); }
+
+/* Measurements */
+.measure { width: 100%; border-collapse: collapse; margin-top: 8px; font-variant-numeric: tabular-nums; }
+.measure th, .measure td { text-align: left; padding: 14px 8px 14px 0; border-bottom: 1px solid var(--line); }
+.measure th { font-weight: 500; color: var(--muted); }
+.measure td { font: 700 20px var(--clock); }
+.scroll { overflow-x: auto; }
+
+/* Closing */
+.closing { position: relative; overflow: hidden; background: var(--deep); }
+.closing-grid { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 32px; align-items: center; }
+.closing h2 { font-size: clamp(38px, 7vw, 74px); }
+.fine { margin-top: 18px; font-size: 14px; color: var(--muted); max-width: 62ch; }
+footer { padding-block: 26px 40px; background: var(--deep); font-size: 14px; color: var(--muted); border-top: 1px solid var(--line); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+@media (max-width: 760px) {
+  .phone-grid, .closing-grid { grid-template-columns: minmax(0, 1fr); }
+  .toplinks a:not(.small) { display: none; }
+  .stage { min-height: 520px; }
+  .pane-area { height: 306px; }
+  .stage-peek { display: none; }
+  .notch.open { width: calc(100% - 28px); }
+  .notch::before, .notch::after { display: none; }
+  .readouts { grid-template-columns: minmax(0, 1fr); gap: 7px; margin-top: 10px; }
+  .readouts > div { padding: 0; border: 0; }
+  .home-hello span { display: none; }
+  .ribbon { margin-top: 10px; }
+  .prayer-pane, .music-pane { grid-template-columns: minmax(0, 1fr); align-content: start; gap: 10px; }
+  .lyrics { border: 0; padding: 0; }
+  .dock button { width: 44px; }
+  .ribbon-p:not(.is-next) { color: transparent; }
+  .ribbon-p:not(.is-next) b { color: transparent; }
+  .gallery figure { grid-column: span 12; }
+  .closing-grid > svg { max-width: 150px; }
+  .notch-text { display: none; }
+  .notch-bar { justify-content: space-between; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .sky[data-sky="night"] .star { opacity: 0.8; }
+  .sky[data-sky="rain"] .drop { opacity: 0.5; top: var(--still, 30%); }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a href="#atas" aria-label="KALA, ke atas halaman"><svg class="wordmark" viewBox="-1 -3 192 54" fill="none" stroke="currentColor" stroke-width="8" aria-hidden="true"><path d="M4 0V48M38 0L10 24L38 48"/><path d="M50 48L70 2L90 48"/><path d="M104 0V44H136"/><path d="M146 48L166 2L186 48"/></svg></a>
+    <nav class="toplinks" aria-label="Bagian halaman"><a href="#cuaca">Cuaca</a><a href="#tampilan">Tampilan</a><a href="#hp">Aplikasi HP</a><a href="#ringan">Ringan</a><a class="button primary small" href="#unduh">Unduh</a></nav>
+  </div>
+</header>
+
+<main id="atas">
+  <section class="hero">
+    <div class="wrap">
+      <h1>Sakiceup, <span>sagala katempo.</span></h1>
+      <p class="gloss">Bahasa Sunda: sekedip mata, semua kelihatan.</p>
+      <p class="lead">Notch mungil di tepi atas layar Windows. Waktu sholat, lirik lagu, meeting, dan izin Claude Code, sekali lirik.</p>
+      <div class="actions">
+        <a class="button primary" href="https://github.com/rezamahendraaa23/KALA/releases/latest">Unduh untuk Windows</a>
+        <a class="button" href="https://github.com/rezamahendraaa23/KALA/releases/latest/download/KALA-android.apk">Aplikasi Android</a>
+      </div>
+      <p class="hint" id="greeting">Gratis. Diuji di Windows 11, belum di Windows 10.</p>
+      <div class="stage" id="stage">
+        <div class="stage-dots"></div>
+        <div class="stage-aksara" aria-hidden="true">ᮊᮜ</div>
+        <div class="stage-peek" id="hero-mascot"></div>
+        <div class="notch-wrap">
+          <div class="notch open" id="notch">
+            <button class="notch-bar" id="notch-bar" aria-expanded="true" aria-controls="notch-panel">
+              <svg width="30" height="19" viewBox="0 0 64 40" aria-hidden="true"><rect x="16" y="2" width="9" height="20" rx="4.5" fill="#2f80ff"/><rect x="39" y="2" width="9" height="20" rx="4.5" fill="#2f80ff"/><path d="M24 29q8 7 16 0" fill="none" stroke="#2f80ff" stroke-width="4" stroke-linecap="round"/><circle cx="6" cy="26" r="4.5" fill="#e0719a"/><circle cx="58" cy="26" r="4.5" fill="#e0719a"/></svg>
+              <span class="notch-title" id="notch-title">Home</span>
+              <span class="notch-state"><span class="notch-time" id="clock">--:--</span></span>
+            </button>
+            <div class="notch-body" id="notch-panel"><div class="notch-inner">
+              <div class="pane-area">
+                <div class="pane" data-show="home">
+                  <div class="home-top"><p class="big-clock"><span id="big-hour">--</span><i>:</i><span id="big-minute">--</span><small id="big-second">--</small></p><p class="home-hello" id="home-hello"></p></div>
+                  <div class="ribbon" id="ribbon" aria-hidden="true"></div>
+                  <div class="readouts"><div><p><span>SHOLAT</span><b id="read-left"></b></p><strong id="read-prayer"></strong></div><div><p><span>MEETING</span>16.00</p><strong>Rapat mingguan</strong></div><div><p><span>DIPUTAR</span></p><strong>Lagu Contoh</strong></div></div>
+                </div>
+                <div class="pane prayer-pane" data-show="sholat" hidden>
+                  <div><p class="eyebrow">Berikutnya</p><p class="prayer-name"><span id="next-name"></span><small id="next-time"></small></p><p class="prayer-left" id="next-left"></p><div class="bar"><i id="next-bar"></i></div></div>
+                  <svg class="arc" id="arc" viewBox="0 0 310 112" aria-hidden="true"></svg>
+                </div>
+                <div class="pane music-pane" data-show="musik" hidden>
+                  <div class="track"><div class="art"></div><div><b>Lagu Contoh</b><span>KALA</span></div></div>
+                  <div class="lyrics" aria-hidden="true"><p id="lyric-prev"></p><p class="now-line" id="lyric-now"></p><p id="lyric-next"></p></div>
+                </div>
+                <div class="pane" data-show="izin" hidden>
+                  <div class="ask"><h3>Claude Code minta izin: Bash</h3><code>npm run build</code><div class="ask-row"><button id="ask-no">Tolak</button><button class="yes" id="ask-yes">Izinkan</button></div><p class="ask-done" id="ask-done" aria-live="polite"></p></div>
+                </div>
+              </div>
+              <div class="dock" role="group" aria-label="Pilih tab contoh">
+                <button data-pane="home" aria-label="Home" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v9a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></svg></button>
+                <button data-pane="sholat" aria-label="Sholat" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg></button>
+                <button data-pane="musik" aria-label="Musik" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></button>
+                <button data-pane="izin" aria-label="Izin" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.2 7.7 8 9 4.8-1.3 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg></button>
+              </div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band sky-section" id="cuaca">
+    <div class="wrap">
+      <div class="head">
+        <h2>Langitnya ikut cuaca di kotamu.</h2>
+        <p class="quiet">Tab Sholat membaca cuaca asli dari Open-Meteo. Kalau hujan ya hujan, kalau malam bulan dan bintang keluar. Coba tekan.</p>
+      </div>
+      <div class="sky" id="sky" data-sky="clear" role="img" aria-label="Contoh langit">
+        <div class="sun"></div><div class="moon"></div>
+        <div class="cloud one"></div><div class="cloud two"></div>
+        <p class="sky-label"><span id="sky-title">Cerah</span><small id="sky-note">Matahari jalan dari Subuh ke Isya.</small></p>
+      </div>
+      <div class="sky-controls" role="group" aria-label="Pilih cuaca">
+        <button class="choice" data-sky="clear" aria-pressed="true">Cerah</button>
+        <button class="choice" data-sky="cloudy" aria-pressed="false">Berawan</button>
+        <button class="choice" data-sky="rain" aria-pressed="false">Hujan</button>
+        <button class="choice" data-sky="night" aria-pressed="false">Malam</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="tampilan">
+    <div class="wrap">
+      <div class="head">
+        <h2>Ini tampilan aslinya.</h2>
+        <p class="quiet">Tangkapan layar dari aplikasi, dengan jadwal dan lagu contoh.</p>
+      </div>
+      <div class="gallery">
+        <figure class="wide"><img class="shot" src="screens/home.png" alt="Panel Home KALA: jam, garis waktu sholat dan meeting, serta ringkasan" width="1013" height="374" loading="lazy"><figcaption><b>Seharian dalam satu garis</b>Jam sholat dan titik meeting hari ini, dengan yang berikutnya di bawahnya.</figcaption></figure>
+        <figure><img class="shot" src="screens/sholat.png" alt="Tab Sholat KALA dengan lintasan matahari" width="1013" height="374" loading="lazy"><figcaption><b>Sholat</b>Pengingat 5 sampai 30 menit sebelumnya, tanpa suara adzan.</figcaption></figure>
+        <figure><img class="shot" src="screens/musik.png" alt="Tab Musik KALA dengan lirik di kanan" width="1013" height="374" loading="lazy"><figcaption><b>Musik dan lirik</b>Tekan tombol komentar: lirik muncul di panel dan di notch.</figcaption></figure>
+        <figure><img class="shot" src="screens/agenda.png" alt="Tab Agenda KALA berisi daftar meeting" width="1013" height="374" loading="lazy"><figcaption><b>Agenda Lark</b>Hanya membaca. Nama ruangan bisa kamu lengkapi sendiri.</figcaption></figure>
+        <figure><img class="shot" src="screens/fokus.png" alt="Tab Fokus KALA dengan timer Pomodoro" width="1013" height="374" loading="lazy"><figcaption><b>Fokus</b>Saat sesi jalan, notifikasi ditahan dulu. Izin Claude tetap muncul.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="band sky-section" id="hp">
+    <div class="wrap phone-grid">
+      <div>
+        <h2>Laptop kerja, kamu ngopi.</h2>
+        <p class="quiet" style="margin-top:14px">Aplikasi Android-nya tersambung lewat Wi-Fi yang sama, cukup pindai QR sekali.</p>
+        <ul class="feature-list">
+          <li><b>Izin Claude Code.</b> Perintahnya tampil utuh, lalu geser untuk mengizinkan.</li>
+          <li><b>Baca dan balas sesi.</b> Pakai sidik jari. Tiap perintah tetap perlu izinmu.</li>
+          <li><b>Jadwal, musik, berkas, clipboard.</b> Semuanya dari satu aplikasi.</li>
+        </ul>
+        <div class="slide">
+          <label for="allow">Coba di sini. Ini contoh, tidak ada yang dijalankan.</label>
+          <code>npm run build</code>
+          <input id="allow" type="range" min="0" max="100" value="0" aria-label="Geser untuk mengizinkan contoh perintah">
+          <p class="slide-result" id="allow-result" aria-live="polite"></p>
+        </div>
+      </div>
+      <div class="phones">
+        <img src="screens/android-izin.png" alt="Kartu izin Claude di aplikasi Android KALA" width="1179" height="2556" loading="lazy">
+        <img src="screens/android-jadwal.png" alt="Jadwal sholat dengan langit di aplikasi Android KALA" width="1179" height="2556" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="ringan">
+    <div class="wrap">
+      <div class="head">
+        <h2>Ringan, dan ini angkanya.</h2>
+        <p class="quiet">Diukur di laptop pengembang saat musik diputar, sebagai persen dari seluruh CPU. Di laptopmu bisa berbeda.</p>
+      </div>
+      <div class="scroll"><table class="measure">
+        <tbody>
+          <tr><th scope="row">Proses utama KALA</th><td>0,1–0,2%</td></tr>
+          <tr><th scope="row">Tampilan notch (WebView2)</th><td>0,3–1,6%</td></tr>
+          <tr><th scope="row">Installer Windows</th><td>3 MB</td></tr>
+          <tr><th scope="row">Aplikasi Android</th><td>2,5 MB</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section class="band closing" id="unduh">
+    <div class="wrap closing-grid">
+      <div>
+        <h2>Pasang, lalu lupakan.</h2>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/rezamahendraaa23/KALA/releases/latest">Unduh untuk Windows</a>
+          <a class="button" href="https://github.com/rezamahendraaa23/KALA/releases/latest/download/KALA-android.apk">Aplikasi Android</a>
+        </div>
+        <p class="fine">Belum memakai sertifikat code signing, jadi Windows bisa memperingatkan: pilih More info, lalu Run anyway. Android juga bisa memperingatkan karena dipasang di luar Play Store. Pasang hanya kalau kamu percaya sumbernya.</p>
+      </div>
+      <div id="closing-mascot"></div>
+    </div>
+  </section>
+</main>
+<footer><div class="wrap"><span>Dibuat oleh Reza Mahendra.</span><a href="https://github.com/rezamahendraaa23/KALA">GitHub</a></div></footer>
+
+<script>
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const pad = (n) => String(n).padStart(2, "0");
+
+const hour = new Date().getHours();
+const part = hour < 4 ? "wengi" : hour < 11 ? "enjing" : hour < 15 ? "siang" : hour < 18 ? "sonten" : "wengi";
+document.getElementById("greeting").textContent = `Wilujeng ${part}! Gratis. Diuji di Windows 11, belum di Windows 10.`;
+document.getElementById("home-hello").innerHTML = `Wilujeng ${part}<span>Isinya contoh</span>`;
+
+const PRAYERS = [["Subuh", 4, 8], ["Dzuhur", 11, 40], ["Ashar", 14, 55], ["Maghrib", 17, 49], ["Isya", 19, 1]];
+const MEETINGS = [16, 19];
+const atToday = (h, m) => { const d = new Date(); d.setHours(h, m, 0, 0); return d; };
+const dot = (h, m) => `${pad(h)}.${pad(m)}`;
+const ribbonAt = (h, m = 0) => Math.min(100, Math.max(0, ((h + m / 60 - 3) / 21) * 100));
+const nextPrayer = (now) => {
+  for (const [name, h, m] of PRAYERS) if (atToday(h, m) > now) return { name, h, m, at: atToday(h, m) };
+  const [name, h, m] = PRAYERS[0];
+  const at = atToday(h, m); at.setDate(at.getDate() + 1);
+  return { name, h, m, at };
+};
+const left = (at, now) => {
+  const minutes = Math.max(1, Math.ceil((at - now) / 60000));
+  return minutes < 60 ? `${minutes} menit` : `${Math.floor(minutes / 60)} jam ${minutes % 60} menit`;
+};
+const arcPoint = (p) => [26 + p * 258, 84 - 66 * Math.sin(Math.PI * (0.06 + p * 0.88))];
+const sunAt = (now) => {
+  const times = PRAYERS.map(([, h, m]) => atToday(h, m).getTime());
+  const t = now.getTime();
+  if (t < times[0] || t >= times[4]) return null;
+  const i = times.findIndex((_, k) => t < times[k + 1]);
+  return (i + (t - times[i]) / (times[i + 1] - times[i])) / 4;
+};
+const drawDemo = () => {
+  const now = new Date();
+  const next = nextPrayer(now);
+  document.getElementById("clock").textContent = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  document.getElementById("big-hour").textContent = pad(now.getHours());
+  document.getElementById("big-minute").textContent = pad(now.getMinutes());
+  document.getElementById("big-second").textContent = pad(now.getSeconds());
+  document.getElementById("read-left").textContent = left(next.at, now);
+  document.getElementById("read-prayer").textContent = `${next.name} ${dot(next.h, next.m)}`;
+  document.getElementById("next-name").textContent = next.name;
+  document.getElementById("next-time").textContent = dot(next.h, next.m);
+  document.getElementById("next-left").textContent = `${left(next.at, now)} lagi`;
+  const nowAt = ribbonAt(now.getHours(), now.getMinutes());
+  document.getElementById("ribbon").innerHTML = `<div class="ribbon-line"></div><div class="ribbon-done" style="width:${nowAt}%"></div>`
+    + MEETINGS.map((h) => `<div class="ribbon-meet" style="left:${ribbonAt(h)}%"></div>`).join("")
+    + PRAYERS.map(([name, h, m]) => `<div class="ribbon-p${name === next.name ? " is-next" : ""}" style="left:${ribbonAt(h, m)}%;${name === "Maghrib" ? "transform:translateX(-9px)" : name === "Isya" ? "transform:translateX(9px)" : ""}">${name}<b>${dot(h, m)}</b></div>`).join("")
+    + `<div class="ribbon-now" style="left:${nowAt}%"></div>`;
+  const sun = sunAt(now);
+  document.getElementById("next-bar").style.width = `${sun === null ? 100 : Math.round((sun * 4 % 1) * 100)}%`;
+  let path = "";
+  for (let i = 0; i <= 50; i += 1) { const [x, y] = arcPoint(i / 50); path += `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`; }
+  let done = "";
+  const reach = sun ?? (now < atToday(4, 8) ? 0 : 1);
+  for (let i = 0; i <= 50; i += 1) { const [x, y] = arcPoint(reach * i / 50); done += `${i ? "L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`; }
+  const [sx, sy] = arcPoint(sun ?? 0.5);
+  const body = sun === null
+    ? `<path d="M${sx - 2} ${sy - 24}a11 11 0 1 0 12 15a9 9 0 0 1-12-15z" fill="#dfe2ff"/>`
+    : `<circle cx="${sx}" cy="${sy}" r="19" fill="#ffd28a" opacity=".22"/><circle cx="${sx}" cy="${sy}" r="7.5" fill="#ffd28a"/>`;
+  const dots = [0, 0.25, 0.5, 0.75, 1].map((p, i) => {
+    const [x, y] = arcPoint(p);
+    const isNext = PRAYERS[i][0] === next.name;
+    return `<circle cx="${x}" cy="${y}" r="5" fill="#050814" stroke="${isNext ? "#2f80ff" : "rgba(255,255,255,.35)"}" stroke-width="${isNext ? 2.2 : 1.3}"/><text x="${x}" y="108" text-anchor="middle" font-size="11" font-weight="600" fill="${isNext ? "#2f80ff" : "#a9b8d3"}">${PRAYERS[i][0]}</text>`;
+  }).join("");
+  document.getElementById("arc").innerHTML = `<path d="${path}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="2" stroke-dasharray="1 5" stroke-linecap="round"/>`
+    + (reach > 0 ? `<path d="${done}" fill="none" stroke="#2f80ff" stroke-width="2.5" stroke-linecap="round"/>` : "") + dots + body;
+};
+drawDemo();
+setInterval(drawDemo, 1000);
+
+const LINES = ["Sakiceup sagala katempo", "Di luhur layar anjeun", "Jam sholat jeung lagu", "Sadayana aya di dieu", "Hampang tur teu ngaganggu"];
+let lyric = 0;
+const drawLyric = () => {
+  document.getElementById("lyric-prev").textContent = LINES[(lyric + LINES.length - 1) % LINES.length];
+  document.getElementById("lyric-next").textContent = LINES[(lyric + 1) % LINES.length];
+  document.getElementById("lyric-now").innerHTML = LINES[lyric].split(" ").map((word, i) => `<span style="animation-delay:${i * 45}ms">${word}&nbsp;</span>`).join("");
+  lyric = (lyric + 1) % LINES.length;
+};
+drawLyric();
+if (!reduced) setInterval(drawLyric, 2800);
+
+const notch = document.getElementById("notch");
+const bar = document.getElementById("notch-bar");
+const dockButtons = [...notch.querySelectorAll("[data-pane]")];
+const TITLES = { home: "Home", sholat: "Sholat", musik: "Musik", izin: "Izin" };
+const setOpen = (open) => {
+  notch.classList.toggle("open", open);
+  bar.setAttribute("aria-expanded", String(open));
+  document.getElementById("notch-panel").inert = !open;
+  document.getElementById("notch-title").textContent = open ? TITLES[dockButtons.find((b) => b.getAttribute("aria-pressed") === "true").dataset.pane] : "Klik aku";
+};
+const showPane = (name) => {
+  dockButtons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.pane === name)));
+  notch.querySelectorAll("[data-show]").forEach((pane) => { pane.hidden = pane.dataset.show !== name; });
+  document.getElementById("notch-title").textContent = TITLES[name];
+};
+let touched = false;
+bar.addEventListener("click", () => { touched = true; setOpen(!notch.classList.contains("open")); });
+dockButtons.forEach((b) => b.addEventListener("click", () => { touched = true; showPane(b.dataset.pane); }));
+// Tours the tabs by itself only until someone takes over, and never against reduced motion.
+if (!reduced) {
+  const TOUR_MS = 4200;
+  const order = dockButtons.map((b) => b.dataset.pane);
+  let at = 0;
+  const tour = setInterval(() => {
+    if (touched) { clearInterval(tour); return; }
+    at = (at + 1) % order.length;
+    showPane(order[at]);
+  }, TOUR_MS);
+}
+const answer = (text) => {
+  touched = true;
+  document.getElementById("ask-done").textContent = `${text} Ini contoh, tidak ada yang dijalankan.`;
+};
+document.getElementById("ask-yes").addEventListener("click", () => answer("Diizinkan."));
+document.getElementById("ask-no").addEventListener("click", () => answer("Ditolak."));
+
+const mascotSvg = `<svg class="mascot" viewBox="0 0 240 190" role="img" aria-label="Maskot KALA">
+  <text class="zzz" x="186" y="44">z</text>
+  <g class="eye"><rect x="72" y="42" width="30" height="70" rx="15" fill="#2f80ff"/></g>
+  <g class="eye"><rect x="138" y="42" width="30" height="70" rx="15" fill="#2f80ff"/></g>
+  <path d="M98 136q22 22 44 0" fill="none" stroke="#2f80ff" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="44" cy="124" r="15" fill="#e0719a" opacity=".85"/><circle cx="196" cy="124" r="15" fill="#e0719a" opacity=".85"/>
+</svg>`;
+["hero-mascot", "closing-mascot"].forEach((id) => { document.getElementById(id).innerHTML = mascotSvg; });
+const mascots = [...document.querySelectorAll(".mascot")];
+const eyes = [...document.querySelectorAll(".mascot .eye")];
+const SLEEP_AFTER_MS = 12000;
+const REACH = 16;
+let idle;
+const doze = () => mascots.forEach((m) => m.classList.add("asleep"));
+const wake = () => {
+  mascots.forEach((m) => {
+    if (!m.classList.contains("asleep")) return;
+    m.classList.remove("asleep");
+    m.classList.remove("woke");
+    void m.getBBox();
+    m.classList.add("woke");
+  });
+  clearTimeout(idle);
+  idle = setTimeout(doze, SLEEP_AFTER_MS);
+};
+wake();
+["pointermove", "keydown", "scroll", "touchstart"].forEach((type) => addEventListener(type, wake, { passive: true }));
+addEventListener("pointermove", (event) => {
+  if (reduced) return;
+  eyes.forEach((eye) => {
+    const box = eye.getBoundingClientRect();
+    const dx = event.clientX - (box.left + box.width / 2);
+    const dy = event.clientY - (box.top + box.height / 2);
+    const distance = Math.hypot(dx, dy) || 1;
+    const pull = Math.min(REACH, distance / 18);
+    eye.style.transform = `translate(${(dx / distance) * pull}px, ${(dy / distance) * pull}px)`;
+  });
+}, { passive: true });
+if (!reduced) {
+  setInterval(() => {
+    mascots.forEach((m) => m.classList.add("blink"));
+    setTimeout(() => mascots.forEach((m) => m.classList.remove("blink")), 130);
+  }, 4300);
+}
+
+const sky = document.getElementById("sky");
+const STAR_COUNT = 28;
+const DROP_COUNT = 44;
+for (let i = 0; i < STAR_COUNT; i += 1) {
+  const star = document.createElement("div");
+  star.className = "star";
+  star.style.cssText = `left:${(i * 37) % 100}%;top:${(i * 23) % 72}%;animation-delay:${-(i * 0.43) % 3.5}s`;
+  sky.append(star);
+}
+for (let i = 0; i < DROP_COUNT; i += 1) {
+  const drop = document.createElement("div");
+  drop.className = "drop";
+  drop.style.cssText = `left:${(i * 41) % 100}%;animation-delay:${-(i * 0.17) % 0.85}s;--still:${(i * 29) % 90}%`;
+  sky.append(drop);
+}
+const SCENES = {
+  clear: ["Cerah", "Matahari jalan dari Subuh ke Isya."],
+  cloudy: ["Berawan", "Mataharinya mengintip dari balik awan."],
+  rain: ["Hujan", "Bawa payung, sholatnya 2 jam lagi."],
+  night: ["Malam", "Bulan dan bintang, sampai Subuh."],
+};
+document.querySelectorAll(".sky-controls .choice").forEach((button) => button.addEventListener("click", () => {
+  document.querySelectorAll(".sky-controls .choice").forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+  const name = button.dataset.sky;
+  sky.dataset.sky = name;
+  document.getElementById("sky-title").textContent = SCENES[name][0];
+  document.getElementById("sky-note").textContent = SCENES[name][1];
+}));
+
+const allow = document.getElementById("allow");
+const result = document.getElementById("allow-result");
+const COMMIT = 90;
+const settle = () => {
+  if (Number(allow.value) >= COMMIT) {
+    allow.value = 100;
+    allow.disabled = true;
+    result.textContent = "Diizinkan. Di aplikasi aslinya, laptop lanjut bekerja.";
+  } else {
+    allow.value = 0;
+  }
+};
+allow.addEventListener("change", settle);
+allow.addEventListener("pointerup", settle);
+</script>
+</body>
+</html>
