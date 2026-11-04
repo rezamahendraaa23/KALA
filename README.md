@@ -21,9 +21,15 @@ Keduanya memberi tahu saat ada versi baru. Di laptop, pembaruan dipasang dari Pe
 
 ## Di laptop
 
-### Sholat
+### Home
 
-Jadwal harian per kota dari MyQuran, termasuk Imsak dan Terbit, dengan pengingat 5 sampai 30 menit sebelumnya. Langitnya mengikuti cuaca dari Open-Meteo, di kota pilihanmu atau di kecamatan yang kamu isi sendiri: matahari, awan, hujan, atau petir, lalu bulan dan bintang saat malam.
+Lima layout untuk dipilih di Pengaturan > Home: **Tenang** (clean), **Maskot** (lucu), **Konsol** (tech), **Galeri** (mewah), dan **Jam saja** (sederhana). Isinya bisa dipilih dan diurutkan: sholat, puasa, meeting, lagu, cuaca, air, tugas, baterai, dan fokus. Yang mendesak, seperti sholat dalam 10 menit, otomatis maju ke depan.
+
+### Sholat dan puasa
+
+Jadwal harian per kota dari MyQuran, termasuk Imsak dan Terbit, dengan pengingat 5 sampai 30 menit sebelumnya. Saat Ramadan, Home menghitung mundur ke berbuka dan imsak. Di luar Ramadan, KALA mengenali puasa Senin, Kamis, dan Ayyamul Bidh, dan bisa mengingatkan sahur serta malam sebelumnya. Tanggal Hijriah memakai kalender Umm al-Qura dan bisa digeser satu hari supaya sama dengan penetapan pemerintah.
+
+Langitnya mengikuti cuaca dari Open-Meteo, di kota pilihanmu atau di kecamatan yang kamu isi sendiri. Gerimis dan hujan di bawah 1 mm ditampilkan sebagai mendung, karena model cuaca sering menyebut hujan lokal yang tidak terasa.
 
 ![Tab Sholat](screens/sholat.png)
 
@@ -61,8 +67,9 @@ Wi-Fi, Bluetooth, hotspot, mikrofon, kecerahan, dan volume di satu tempat, ditam
 - **Catatan & Tugas:** catatan cepat dan daftar tugas dengan tanggal, disaring Hari ini, Mendatang, atau Semua.
 - **Monitor:** CPU, GPU, RAM, dan kecepatan internet dengan grafik kecil.
 - **Clipboard:** teks dan gambar yang disalin, bisa dicari dan disematkan. Mati sampai dinyalakan. Riwayat hanya di memori, sematan disimpan terenkripsi.
-- **Air:** target minum harian, gelas yang bisa diatur, dan pengingat tiap 90 menit antara 08.00 dan 21.00.
-- **Rak Berkas:** jemuran untuk menaruh sampai 8 file sebentar, lalu ditarik lagi ke WhatsApp, Discord, atau folder lain. Klik untuk memilih beberapa file dan tarik semuanya sekaligus, atau tekan **Kirim ke HP** supaya file siap diambil di tab Berkas pada aplikasi HP. Menyeret file ke notch langsung membuka tab ini.
+- **Air:** target harian, sekali minum bebas sampai 3.000 ml (cocok untuk tumbler), dan pengingat dengan jam mulai, jam selesai, jeda, serta bunyi yang bisa diatur. Saat waktunya minum, maskotnya kehausan.
+- **Rak Berkas:** jemuran untuk menaruh sampai 8 file sebentar, lalu ditarik lagi ke WhatsApp, Discord, atau folder lain. Klik untuk memilih beberapa file dan tarik semuanya sekaligus, atau tekan **Kirim ke HP** supaya file siap diambil di tab Berkas pada aplikasi HP. Menyeret file ke notch langsung membuka tab ini, dan tangkapan layar baru bisa langsung masuk ke sini.
+- **Istirahat mata 20-20-20:** setelah lama di depan layar, maskot mengajak melihat jauh selama 20 detik. Ditahan selama sesi Fokus dan meeting.
 
 Clipboard, Air, dan Rak Berkas disembunyikan dulu. Munculkan di Pengaturan > Tab & Navigasi.
 
@@ -71,7 +78,8 @@ Clipboard, Air, dan Rak Berkas disembunyikan dulu. Munculkan di Pengaturan > Tab
 - **Izin Claude Code:** permintaan izin di VS Code bisa dijawab dari notch. Mati sampai dinyalakan di Pengaturan > Sistem.
 - **Notifikasi:** notifikasi Windows tampil di notch dan tersimpan sebagai riwayat, dengan filter belum dibaca, bisukan per aplikasi, dan jangan ganggu. Klik notifikasi untuk membuka aplikasinya; Windows tidak memberi tautan ke chat tertentu, jadi yang terbuka aplikasinya saja. Tab-nya bisa dimunculkan di Pengaturan > Tab & Navigasi.
 - **Penanda singkat:** animasi saat Caps Lock atau mode hening berubah, dan peringatan kalau CPU atau RAM di atas 90% selama satu menit.
-- **Isi notch:** kiri, tengah, dan kanan bisa diisi maskot, sholat, cuaca, status Claude, meeting, fokus, lagu, hitung mundur, jam pulang, tanggal Hijriah, atau info sistem. Ada enam maskot untuk dipilih.
+- **Isi notch:** kiri, tengah, dan kanan bisa diisi maskot, sholat, cuaca, status Claude, meeting, fokus, lagu, hitung mundur, jam pulang, tanggal Hijriah, atau info sistem. Ada enam maskot sederhana untuk dipilih. Maskotnya memakai headphone saat musik diputar lewat TWS, mengeluarkan not balok lewat speaker, dan memakai peci menjelang sholat.
+- **Hemat RAM:** saat notch kecil, tampilan KALA melepas memori yang tidak dipakai. Di laptop pengembang, RAM fisiknya turun dari sekitar 385 MB ke 64 MB.
 - **Earphone:** notch memberi tahu saat TWS atau headset tersambung dan terputus.
 - **Tampilan:** bentuk, posisi, ukuran, warna, transparansi, dan urutan tab bisa diatur.
 
